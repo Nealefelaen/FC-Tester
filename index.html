@@ -35,12 +35,27 @@
    var test_div;
    var fc_length;
 
-   document.onkeypress = checkKeycode;
+//   document.onkeypress = checkKeycode;
+
+   function sortfunction(a, b)
+   {
+    return (b.average_time_taken - a.average_time_taken);
+   }
 
    function write_statistics()
    {
     document.getElementById("test_div").style.display = 'none';
     var temptext;
+    for(var i=0; i < number_of_FCs; i++)
+    {
+     var total_time = 0;
+     for(var j=0; j < FCs[i].number_of_times; j++)
+     {
+      total_time += FCs[i].time_taken[j];
+     }
+     FCs[i].average_time_taken = total_time / FCs[i].number_of_times;
+    }
+    FCs.sort(sortfunction);
     started = 0;
      temptext = "<table><tr><td>FC</td>";
      for(var j = 1; j <= show_each_times; j++)
@@ -59,16 +74,13 @@
        if(j < FCs[i].number_of_times)
        {
         temptext += "<td>" + FCs[i].time_taken[j] + "ms</td>";
-        total_time += FCs[i].time_taken[j];
        }
        else
        {
         temptext += "<td>-</td>";
        }
       }
-      var average_time = total_time / FCs[i].number_of_times;
-//      alert(total_time);
-      temptext += "<td>" + Math.round(average_time) + "ms</td></tr>";
+      temptext += "<td>" + Math.round(FCs[i].average_time_taken) + "ms</td></tr>";
      }
     }
     temptext += "</table>";
