@@ -33,7 +33,9 @@
    var last_randomnumber = -1;
    var l = 0;
    var test_div;
+   var test_div_div;
    var fc_length;
+   var fc_size = 200;
 
 //   document.onkeypress = checkKeycode;
 
@@ -44,7 +46,8 @@
 
    function write_statistics()
    {
-    document.getElementById("test_div").style.display = 'none';
+    test_div_div.style.display = 'none';
+    test_div.innerHTML = '--';
     var temptext;
     for(var i=0; i < number_of_FCs; i++)
     {
@@ -86,16 +89,34 @@
     temptext += "</table>";
     if(fcs_shown < fcs_to_show)
     {
-     temptext += '<input style="margin-top: 5px;" type="button" value="Resume" onClick="started=1; startTime = new Date().getTime(); document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\';">'
+     temptext += '<input style="margin-top: 5px;" type="button" value="Resume" onClick="started=1; startTime = new Date().getTime(); document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">'
     }
-    temptext += '<input style="margin-top: 5px;" type="button" value="Go Again" onClick="FCs = []; random_number=-1; settings_setup(); started=1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester();">'
+    temptext += '<input style="margin-top: 5px;" type="button" value="Go Again" onClick="FCs = []; random_number=-1; settings_setup(); started=1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_setup();">'
     temptext += '<input style="margin-top: 5px;" type="button" value="Settings" onClick="FCs = []; random_number=-1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'start\').style.display=\'block\';">'
     document.getElementById("result").innerHTML = temptext;
    }
    function page_setup()
    {
-    document.getElementById("test").style.fontSize='200px';
     test_div = document.getElementById("test");
+    test_div.style.fontSize='200';
+    test_example = document.getElementById("test_example");
+    test_example.style.fontSize='200';
+    test_div_div = document.getElementById("test_div");
+   }
+
+   function tester_setup()
+   {
+    var temptext;
+    temptext = "<input type='button' value='Pause' onClick='write_statistics();' /><input type='button' value='Next' onClick='tester();' />";
+    document.getElementById("button_holder").innerHTML = temptext;
+    startTime = new Date().getTime();
+    tester();
+   }
+
+   function tester_unsetup()
+   {
+    temptext = "<input type='button' value='Pause' onClick='write_statistics();' /><input type='button' value='Go!' onClick='tester_setup();' />";
+    document.getElementById("button_holder").innerHTML = temptext;
    }
 
 /*   function checkKeycode(e)
@@ -122,6 +143,7 @@
     show_each_times = document.getElementById("show_each_times").value
     fc_length = document.getElementById("fc_length").selectedIndex+2 // This isn't the best way to do this, it's the neatest - we're ignoring the value of the selected item and going by where it is in the list
     fcs_shown = 0;
+    test_div.style.fontSize=fc_size;
 
     number_of_FCs = (end_fc - start_fc) + 1;
     fcs_to_show = show_each_times * number_of_FCs;
@@ -214,23 +236,25 @@
  </head>
  <body style="color: white; background: black;" onLoad="page_setup();">
   <div style="position: fixed; text-align: center; width: 100%; display: none;" id="test_div">
-  <div id="test"></div>
-  <div>
+  <div id="test">--</div>
+  <div id="button_holder">
    <input type='button' value='Pause' onClick='write_statistics();' />
-   <input type='button' value='Next' onClick='tester();' />
+   <input type='button' value='Go!' onClick='tester_setup();' />
   </div>
   </div>
   <div style="text-align: center;" id="start">
    <p>Welcome to the FC Tester page</p>
-   <p>It's pretty simple to use, change the settings below to the values you want and then press the 'Start!' button. After you've started, press the 'Next' button once you recall the FCs image, the time it took you to recall it will be recorded and the next FC will be shown. After all of the FCs have been shown the number of times set below you will be taken to a statistics page that will show your results.<br /> Good Luck!</p>
+   <p>It's pretty simple to use, change the settings below to the values you want and then press the 'Next' button. When you're ready to go press the 'Go!' button, the 'Next' button will be ready under your cursor. After you've started, press the 'Next' button once you recall the FCs image, the time it took you to recall it will be recorded and the next FC will be shown. After all of the FCs have been shown the number of times set below you will be taken to a statistics page that will show your results.<br /> Good Luck!</p>
    <center><form style='width: 500px;'>
     <span class='label' title='First number in the range of FCs to show'>Start FC: </span><input class='input' id='start_fc' type='text' value=1 /><br />
     <span class='label' title='Last number in the range of FCs to show'>End FC: </span><input class='input' id='end_fc' type='text' value=10 /><br />
     <span class='label' title='Number of times to show each FC'>Number of times to show: </span><input class='input' id='show_each_times' type='text' value=3 /><br />
     <span class='label' title='Show which FCs?'>Show: </span><select class='input' id='fc_length'><option selected='true' value='2'>Two Digit FCs</option><option value='3'>Three Digit FCs</option></select><br />
-    <input style='margin-top: 5px;' type="button" value="Start!" onClick="settings_setup(); started=1; document.getElementById('start').style.display='none'; document.getElementById('test_div').style.display='block'; tester();">
+    <span class='label' title='Increase/Decrease the size of the FC font'>Size of FC font: </span><input type='button' value='+' onClick='fc_size +=10; test_example.style.fontSize=fc_size;' /><input type='button' value='-' onClick='fc_size -=10; test_example.style.fontSize=fc_size;' /><br />
+    <input style='margin-top: 5px;' type="button" value="Next" onClick="settings_setup(); started=1; document.getElementById('start').style.display='none'; document.getElementById('test_div').style.display='block';">
    </form></center>
     <p style='font-size: 0.8em;'>Note: this program isn't feature complete yet, it's a first version - improvements to follow!</p>
+    <span title='Example FC Size' id='test_example'>00</span>
   </div>
   <div style="text-align: center;" id="result"></div>
  </body>
