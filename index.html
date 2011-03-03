@@ -33,12 +33,13 @@
    var last_randomnumber = -1;
    var l = 0;
    var test_div;
+   var fc_length;
 
    document.onkeypress = checkKeycode;
 
    function write_statistics()
    {
-    document.getElementById("test").innerHTML = "";
+    document.getElementById("test_div").style.display = 'none';
     var temptext;
     started = 0;
      temptext = "<table><tr><td>FC</td>";
@@ -52,21 +53,31 @@
      if(FCs[i].number_of_times > 0)
      {
       temptext += "<tr><td>" + FCs[i].fc + "</td>";
+      var total_time = 0;
       for(var j = 0; j < show_each_times; j++)
       {
        if(j < FCs[i].number_of_times)
        {
         temptext += "<td>" + FCs[i].time_taken[j] + "ms</td>";
+        total_time += FCs[i].time_taken[j];
        }
        else
        {
         temptext += "<td>-</td>";
        }
       }
-      temptext += "<td>" + Math.round(FCs[i].average_time_taken) + "ms</td></tr>";
+      var average_time = total_time / FCs[i].number_of_times;
+//      alert(total_time);
+      temptext += "<td>" + Math.round(average_time) + "ms</td></tr>";
      }
     }
     temptext += "</table>";
+    if(fcs_shown < fcs_to_show)
+    {
+     temptext += '<input style="margin-top: 5px;" type="button" value="Resume" onClick="started=1; startTime = new Date().getTime(); document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\';">'
+    }
+    temptext += '<input style="margin-top: 5px;" type="button" value="Go Again" onClick="FCs = []; random_number=-1; settings_setup(); started=1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester();">'
+    temptext += '<input style="margin-top: 5px;" type="button" value="Settings" onClick="FCs = []; random_number=-1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'start\').style.display=\'block\';">'
     document.getElementById("result").innerHTML = temptext;
    }
    function page_setup()
@@ -89,6 +100,7 @@
 //      l++;
      }
      else if(keycode == 27) write_statistics();
+     else if(keycode == 0) write_statistics();
     }
    }
    function settings_setup()
@@ -96,6 +108,8 @@
     start_fc = document.getElementById("start_fc").value
     end_fc = document.getElementById("end_fc").value
     show_each_times = document.getElementById("show_each_times").value
+    fc_length = document.getElementById("fc_length").selectedIndex+2 // This isn't the best way to do this, it's the neatest - we're ignoring the value of the selected item and going by where it is in the list
+    fcs_shown = 0;
 
     number_of_FCs = (end_fc - start_fc) + 1;
     fcs_to_show = show_each_times * number_of_FCs;
@@ -103,7 +117,12 @@
 
     for(var i=0; i<number_of_FCs; i++)
     {
-     FCs[i] = {fc: x, number_of_times: 0, time_taken: [0], average_time_taken: 0, total_time_taken: 0};
+     var temp_text_holder = x + '';
+     while(temp_text_holder.length < fc_length)
+     {
+      temp_text_holder = "0" + temp_text_holder;
+     }
+     FCs[i] = {fc: temp_text_holder, number_of_times: 0, time_taken: [0], average_time_taken: 0, total_time_taken: 0};
      x++;
     }
     
@@ -119,7 +138,7 @@
      {
       FCs[randomnumber].time_taken[FCs[randomnumber].number_of_times-1] = diff;
       FCs[randomnumber].total_time_taken += diff;
-      FCs[randomnumber].average_time_taken = FCs[randomnumber].total_time_taken / FCs[randomnumber].number_of_times;
+//      FCs[randomnumber].average_time_taken = FCs[randomnumber].total_time_taken / FCs[randomnumber].number_of_times;
      }
      else // in which case we want to re-show the number to get an accurate time for it
      {
@@ -182,17 +201,25 @@
   </script>
  </head>
  <body style="color: white; background: black;" onLoad="page_setup();">
-  <div style="position: fixed; text-align: center; width: 100%;" id="test"></div>
-  <div style="text-align: center;" id="result">
+  <div style="position: fixed; text-align: center; width: 100%; display: none;" id="test_div">
+  <div id="test"></div>
+  <div>
+   <input type='button' value='Pause' onClick='write_statistics();' />
+   <input type='button' value='Next' onClick='tester();' />
+  </div>
+  </div>
+  <div style="text-align: center;" id="start">
    <p>Welcome to the FC Tester page</p>
-   <p>It's pretty simple to use, change the settings below to the values you want and then press the 'Start!' button. After you've started, press 'spacebar' once you recall the FCs image and the time it took you to recall it will be recorded and the next FC will be shown. After all of the FCs have been shown the number of times set below you will be taken to a statistics page that will show your results.<br /> Good Luck!</p>
+   <p>It's pretty simple to use, change the settings below to the values you want and then press the 'Start!' button. After you've started, press the 'Next' button once you recall the FCs image, the time it took you to recall it will be recorded and the next FC will be shown. After all of the FCs have been shown the number of times set below you will be taken to a statistics page that will show your results.<br /> Good Luck!</p>
    <center><form style='width: 500px;'>
     <span class='label' title='First number in the range of FCs to show'>Start FC: </span><input class='input' id='start_fc' type='text' value=1 /><br />
     <span class='label' title='Last number in the range of FCs to show'>End FC: </span><input class='input' id='end_fc' type='text' value=10 /><br />
     <span class='label' title='Number of times to show each FC'>Number of times to show: </span><input class='input' id='show_each_times' type='text' value=3 /><br />
-    <input style='margin-top: 5px;' type="button" value="Start!" onClick="settings_setup(); started=1; document.getElementById('result').innerHTML=''; tester();">
+    <span class='label' title='Show which FCs?'>Show: </span><select class='input' id='fc_length'><option selected='true' value='2'>Two Digit FCs</option><option value='3'>Three Digit FCs</option></select><br />
+    <input style='margin-top: 5px;' type="button" value="Start!" onClick="settings_setup(); started=1; document.getElementById('start').style.display='none'; document.getElementById('test_div').style.display='block'; tester();">
    </form></center>
     <p style='font-size: 0.8em;'>Note: this program isn't feature complete yet, it's a first version - improvements to follow!</p>
   </div>
+  <div style="text-align: center;" id="result"></div>
  </body>
 </html>
