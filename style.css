@@ -1,0 +1,21 @@
+body {
+    color: white; 
+    background: black;
+    text-align: center;
+}
+
+.label
+{
+    width: 245px;
+    height: 20px;
+    float: left;
+    text-align: right;
+}
+
+.input
+{
+    width: 245px;
+    height: 20px;
+    float: right;
+    text-align: left;
+} 
