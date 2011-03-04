@@ -213,3 +213,8 @@ function tester()
     
     //    alert(randomnumber);
 }
+
+function changeSize(size) {
+    fc_size += size;
+    $('#test_example').css('font-size', fc_size);
+}

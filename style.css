@@ -4,7 +4,7 @@ body {
     text-align: center;
 }
 
-.label
+label, .label
 {
     width: 245px;
     height: 20px;
@@ -12,10 +12,25 @@ body {
     text-align: right;
 }
 
-.input
+input, .input
 {
     width: 245px;
     height: 20px;
     float: right;
     text-align: left;
 } 
+
+#test_div
+{
+    position: fixed;
+    text-align: center;
+    width: 100%;
+    display: none;
+}
+
+#settings
+{
+    width: 500px;
+    margin-left:auto;
+    margin-right:auto;
+}
