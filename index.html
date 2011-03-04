@@ -5,13 +5,15 @@
     <script type="text/javascript" src="jquery-1.5.1.min.js"></script>
     <script type="text/javascript" src="fc-app.js"></script>
     <script type="text/javascript">
-      $(page_setup); //run page_setup after all elements are finished loading
-      $('#next_button').click(function(){ //assign the onclick event handler for next_button
-        settings_setup();
-        started=1;
-        $('#start').toggle();
-        $('#test_div').toggle();
-      });
+      $(function(){
+        page_setup();
+        $('#next_button').click(function(){
+          settings_setup();
+          started=1;
+          $('#start').toggle();
+          $('#test_div').toggle();
+        });
+      }); //run page_setup after all elements are finished loading
     </script>
   </head>
   <body>
