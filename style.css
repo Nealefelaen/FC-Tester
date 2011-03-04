@@ -1,0 +1,36 @@
+body {
+    color: white; 
+    background: black;
+    text-align: center;
+}
+
+label, .label
+{
+    width: 245px;
+    height: 20px;
+    float: left;
+    text-align: right;
+}
+
+input, .input
+{
+    width: 245px;
+    height: 20px;
+    float: right;
+    text-align: left;
+} 
+
+#test_div
+{
+    position: fixed;
+    text-align: center;
+    width: 100%;
+    display: none;
+}
+
+#settings
+{
+    width: 500px;
+    margin-left:auto;
+    margin-right:auto;
+}

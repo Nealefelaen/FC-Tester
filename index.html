@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>FC Tester</title>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <script type="text/javascript" src="jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="fc-app.js"></script>
+    <script type="text/javascript">
+      $(function(){
+        page_setup();
+        $('#next_button').click(function(){
+          settings_setup();
+          started=1;
+          $('#start').toggle();
+          $('#test_div').toggle();
+        });
+      }); //run page_setup after all elements are finished loading
+    </script>
+  </head>
+  <body>
+    <div id="test_div">
+      <div id="test">--</div>
+      <div id="button_holder">
+        <button onclick='write_statistics();'>Pause</button>
+        <button onclick='tester_setup();'>Go!</button>
+      </div>
+    </div>
+    <div id="start">
+      <p>Welcome to the FC Tester page</p>
+      <p>It's pretty simple to use, change the settings below to the values you want and then press the 'Next' button. When you're ready to go press the 'Go!' button, the 'Next' button will be ready under your cursor. After you've started, press the 'Next' button once you recall the FCs image, the time it took you to recall it will be recorded and the next FC will be shown. After all of the FCs have been shown the number of times set below you will be taken to a statistics page that will show your results.<br /> Good Luck!</p>
+      <div id='settings'>
+        <label for='start_fc' title='First number in the range of FCs to show'>Start FC: </label>
+        <input name='start_fc' id='start_fc' type='text' value="1" />
+        <br />
+        <label for='end_fc' title='Last number in the range of FCs to show'>End FC: </label>
+        <input name='end_fc' id='end_fc' type='text' value='10' />
+        <br />
+        <label for='show_each_times' title='Number of times to show each FC'>Number of times to show: </label>
+        <input name='show_each_times' id='show_each_times' type='text' value='3' />
+        <br />
+        <label title='Show which FCs?'>Show: </label>
+        <select class='input' id='fc_length'>
+          <option selected='selected' value='2'>Two Digit FCs</option>
+          <option value='3'>Three Digit FCs</option>
+        </select>
+        <br />
+        <label title='Increase/Decrease the size of the FC font'>Size of FC font: </label>
+        <button onclick='changeSize(10);'>+</button>
+        <button onclick='changeSize(-10);'>-</button>
+        <br />
+        <button id="next_button" style='margin-top: 5px;'>Next</button>
+      </div>
+      <p style='font-size: 0.8em;'>Note: this program isn't feature complete yet, it's a first version - improvements to follow!</p>
+      <span title='Example FC Size' id='test_example'>00</span>
+    </div>
+    <div id="result"></div>
+  </body>
+</html>
