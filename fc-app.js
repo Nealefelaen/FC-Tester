@@ -69,10 +69,10 @@ function write_statistics()
     temptext += "</table>";
     if(fcs_shown < fcs_to_show)
     {
-        temptext += '<input style="margin-top: 5px;" type="button" value="Resume" onClick="started=1; startTime = new Date().getTime(); document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">'
+        temptext += '<button onclick="started=1; startTime = new Date().getTime(); document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">Resume</button>'
     }
-    temptext += '<input style="margin-top: 5px;" type="button" value="Go Again" onClick="FCs = []; random_number=-1; settings_setup(); started=1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">'
-    temptext += '<input style="margin-top: 5px;" type="button" value="Settings" onClick="FCs = []; random_number=-1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'start\').style.display=\'block\'; tester_unsetup();">'
+    temptext += '<button onclick="FCs = []; random_number=-1; settings_setup(); started=1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">Go Again</button>'
+    temptext += '<button onClick="FCs = []; random_number=-1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'start\').style.display=\'block\'; tester_unsetup();">Settings</button>'
     document.getElementById("result").innerHTML = temptext;
 }
 function page_setup()
@@ -87,7 +87,7 @@ function page_setup()
 function tester_setup()
 {
     var temptext;
-    temptext = "<input type='button' value='Pause' onClick='write_statistics();' /><input type='button' value='Next' onClick='tester();' />";
+    temptext = "<button onclick='write_statistics();'>Pause</button><button onclick='tester();'>Next</button>";
     document.getElementById("button_holder").innerHTML = temptext;
     startTime = new Date().getTime();
     tester();
@@ -95,7 +95,7 @@ function tester_setup()
 
 function tester_unsetup()
 {
-    temptext = "<input type='button' value='Pause' onClick='write_statistics();' /><input type='button' value='Go!' onClick='tester_setup();' />";
+    temptext = "<button onclick='write_statistics();'>Pause</button><button onclick='tester_setup();'>Go!</button>";
     document.getElementById("button_holder").innerHTML = temptext;
 }
 
