@@ -16,6 +16,7 @@ var test_div;
 var test_div_div;
 var fc_length;
 var fc_size = 200;
+var mode = 1;
 
 document.onkeypress = checkKeycode;
 
@@ -77,11 +78,108 @@ function write_statistics()
 }
 function page_setup()
 {
+    read_cookies();
+
+    var temptext;
+    temptext="<option ";
+    if(mode == 1) temptext+="selected='selected'";
+    temptext+="' value='1'>Digits</option>";
+    temptext+="<option ";
+    if(mode == 2) temptext+="selected='selected'";
+    else temptext+="false";
+    temptext+="' value='2'>Paul's Mode</option>";
+    $('#mode_select').html(temptext);
+
     test_div = document.getElementById("test");
     test_div.style.fontSize='200';
-    test_example = document.getElementById("test_example");
-    test_example.style.fontSize='200';
     test_div_div = document.getElementById("test_div");
+    mode_change();
+}
+
+function mode_change()
+{
+    mode=parseInt(mode);
+    var temptext;
+    switch(mode)
+    {
+        case 1:
+            temptext="<p>It's pretty simple to use, change the settings below to the values you want and then press the 'Next' button. When you're ready to go press the 'Go!' button, the 'Next' button will be ready under your cursor. After you've started, press the 'Next' button once you recall the FCs image, the time it took you to recall it will be recorded and the next FC will be shown. After all of the FCs have been shown the number of times set below you will be taken to a statistics page that will show your results.<br /> Good Luck!</p>";
+            temptext+="<div id='settings'>";
+            temptext+="  <label for='start_fc' title='First number in the range of FCs to show'>Start FC: </label>";
+            temptext+="  <input name='start_fc' id='start_fc' type='text' value='"+start_fc+"' />";
+            temptext+="  <br />";
+            temptext+="  <label for='end_fc' title='Last number in the range of FCs to show'>End FC: </label>";
+            temptext+="  <input name='end_fc' id='end_fc' type='text' value='"+end_fc+"' />";
+            temptext+="  <br />";
+            temptext+="  <label for='show_each_times' title='Number of times to show each FC'>Number of times to show: </label>";
+            temptext+="  <input name='show_each_times' id='show_each_times' type='text' value='"+show_each_times+"' />";
+            temptext+="  <br />";
+            temptext+="  <label title='Show which FCs?'>Show: </label>";
+            temptext+="  <select class='input' id='fc_length'>";
+            temptext+="    <option ";
+            if(fc_length == 2) temptext+="selected='selected'";
+            temptext+=" value='2'>Two Digit FCs</option>";
+            temptext+="    <option ";
+            if(fc_length == 3) temptext+="selected='selected'";
+            temptext+=" value='3'>Three Digit FCs</option>";
+            temptext+="  </select>";
+            temptext+="  <br />";
+            temptext+="  <label title='Increase/Decrease the size of the FC font'>Size of FC font: </label>";
+            temptext+="  <button onclick='changeSize(10)'>+</button>";
+            temptext+="  <button onclick='changeSize(-10);'>-</button>";
+            temptext+="  <br />";
+            temptext+="  <button id='next_button' onclick='settings_setup(); write_cookies(); tester_unsetup(); started=1; $(\"#start\").toggle(); $(\"#test_div\").toggle();' style='margin-top: 5px;'>Next</button>";
+            temptext+="</div>";
+            temptext+="<span title='Example FC Size' id='test_example'>00</span>";
+            break;
+        case 2:
+            temptext="<p>test</p>";
+            break;
+    }
+    $('#introduction').html(temptext);
+    $('#test_example').css("font-size", fc_size);
+}
+
+function write_cookies()
+{
+    var date = new Date();
+    date.setTime(date.getTime()+(5*365*24*60*60*1000)); // Keep cookie for 5 years
+    var expires = "; expires="+date.toGMTString();
+
+    document.cookie = "mode="+mode+expires+"; path=/";
+    switch(mode)
+    {
+        case 1:
+            document.cookie = "start_fc="+start_fc+expires+"; path=/";
+            document.cookie = "end_fc="+end_fc+expires+"; path=/";
+            document.cookie = "show_each_times="+show_each_times+expires+"; path=/";
+            document.cookie = "fc_length="+fc_length+expires+"; path=/";
+            document.cookie = "fc_size="+fc_size+expires+"; path=/";
+            break;
+        case 2:
+            break;
+    }
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function read_cookies()
+{
+    if(readCookie('mode')) mode = readCookie('mode');
+    if(readCookie('start_fc')) start_fc = readCookie('start_fc');
+    if(readCookie('end_fc')) end_fc = readCookie('end_fc');
+    if(readCookie('show_each_times')) show_each_times = readCookie('show_each_times');
+    if(readCookie('fc_length')) fc_length = readCookie('fc_length');
+    if(readCookie('fc_size')) fc_size = readCookie('fc_size');
 }
 
 function tester_setup()
@@ -122,7 +220,8 @@ function settings_setup()
     start_fc = document.getElementById("start_fc").value
     end_fc = document.getElementById("end_fc").value
     show_each_times = document.getElementById("show_each_times").value
-    fc_length = document.getElementById("fc_length").selectedIndex+2 // This isn't the best way to do this, it's the neatest - we're ignoring the value of the selected item and going by where it is in the list
+    var fc_length_input = document.getElementById("fc_length");
+    fc_length = fc_length_input.options[fc_length_input.selectedIndex].value;
     fcs_shown = 0;
     test_div.style.fontSize=fc_size;
 
@@ -215,6 +314,7 @@ function tester()
 }
 
 function changeSize(size) {
+    fc_size=parseInt(fc_size);
     fc_size += size;
     $('#test_example').css('font-size', fc_size);
 }

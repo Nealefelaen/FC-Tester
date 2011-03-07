@@ -28,7 +28,7 @@ input, .input
     display: none;
 }
 
-#settings
+#settings, #mode
 {
     width: 500px;
     margin-left:auto;
