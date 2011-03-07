@@ -18,6 +18,21 @@ var fc_length;
 var fc_size = 200;
 var mode = 1;
 
+var paul_submode = 1;
+var paul_0 = false;
+var paul_1 = false;
+var paul_2 = false;
+var paul_3 = false;
+var paul_4 = false;
+var paul_5 = false;
+var paul_6 = false;
+var paul_7 = false;
+var paul_8 = false;
+var paul_9 = false;
+var paul_J = false;
+var paul_Q = false;
+var paul_K = false;
+
 document.onkeypress = checkKeycode;
 
 function sortfunction(a, b)
@@ -133,7 +148,69 @@ function mode_change()
             temptext+="<span title='Example FC Size' id='test_example'>00</span>";
             break;
         case 2:
-            temptext="<p>test</p>";
+            temptext="<p>You want a description of Paul's Mode? So do I =)</p>";
+            temptext+="<div id='settings'>";
+            temptext+="  <label for='paul_submode' title='Select a submode to test'>Sub-mode: </label>"
+            temptext+="  <select class=input' id='paul_submode' onchange='paul_submode=this.options[this.selectedIndex].value; mode_change();'>";
+            temptext+="    <option ";
+            if(paul_submode == 1) temptext+="selected='selected'";
+            temptext+=" value='1'>Face Value FCs</option>";
+            temptext+="    <option ";
+            if(paul_submode == 2) temptext+="selected='selected'";
+            temptext+=" value='2'>Suits</option>";
+            temptext+="  </select><br />";
+            temptext+="  <br />";
+            if(paul_submode == 1)
+            {
+                temptext+="  <div style='float: left;'><label style='height: 5em;' for='suit_selection' title='Select the value of the first card'>First card value: </label>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_0'";
+                if(paul_0 != 'false') temptext+=" checked='true'";
+                temptext+=">0</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_1'";
+                if(paul_1 != 'false') temptext+=" checked='true'";
+                temptext+=">1</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_2'";
+                if(paul_2 != 'false') temptext+=" checked='true'";
+                temptext+=">2</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_3'";
+                if(paul_3 != 'false') temptext+=" checked='true'";
+                temptext+=">3</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_4'";
+                if(paul_4 != 'false') temptext+=" checked='true'";
+                temptext+=">4</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_5'";
+                if(paul_5 != 'false') temptext+=" checked='true'";
+                temptext+=">5</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_6'";
+                if(paul_6 != 'false') temptext+=" checked='true'";
+                temptext+=">6</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_7'";
+                if(paul_7 != 'false') temptext+=" checked='true'";
+                temptext+=">7</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_8'";
+                if(paul_8 != 'false') temptext+=" checked='true'";
+                temptext+=">8</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_9'";
+                if(paul_9 != 'false') temptext+=" checked='true'";
+                temptext+=">9</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_J'";
+                if(paul_J != 'false') temptext+=" checked='true'";
+                temptext+=">J</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_Q'";
+                if(paul_Q != 'false') temptext+=" checked='true'";
+                temptext+=">Q</span>";
+                temptext+="  <span class='paul'><input class='paul' type='checkbox' id='paul_K'";
+                if(paul_K != 'false') temptext+=" checked='true'";
+                temptext+=">K</span>";
+                temptext+="  <br /></div>";
+            }
+            temptext+="  <label title='Increase/Decrease the size of the FC'>Size of FC: </label>";
+            temptext+="  <button onclick='changeSize(10)'>+</button>";
+            temptext+="  <button onclick='changeSize(-10);'>-</button>";
+            temptext+="  <br />";
+            temptext+="  <button id='next_button' onclick='settings_setup(); write_cookies(); tester_unsetup(); started=1; $(\"#start\").toggle(); $(\"#test_div\").toggle();' style='margin-top: 5px;'>Next</button>";
+            temptext+="</div>";
+            temptext+="<span title='Example FC Size' id='test_example'>QQQ</span>";
             break;
     }
     $('#introduction').html(temptext);
@@ -157,6 +234,20 @@ function write_cookies()
             document.cookie = "fc_size="+fc_size+expires+"; path=/";
             break;
         case 2:
+            document.cookie = "paul_submode="+paul_submode+expires+"; path=/";
+            document.cookie = "paul_0="+paul_0+expires+"; path=/";
+            document.cookie = "paul_1="+paul_1+expires+"; path=/";
+            document.cookie = "paul_2="+paul_2+expires+"; path=/";
+            document.cookie = "paul_3="+paul_3+expires+"; path=/";
+            document.cookie = "paul_4="+paul_4+expires+"; path=/";
+            document.cookie = "paul_5="+paul_5+expires+"; path=/";
+            document.cookie = "paul_6="+paul_6+expires+"; path=/";
+            document.cookie = "paul_7="+paul_7+expires+"; path=/";
+            document.cookie = "paul_8="+paul_8+expires+"; path=/";
+            document.cookie = "paul_9="+paul_9+expires+"; path=/";
+            document.cookie = "paul_J="+paul_J+expires+"; path=/";
+            document.cookie = "paul_Q="+paul_Q+expires+"; path=/";
+            document.cookie = "paul_K="+paul_K+expires+"; path=/";
             break;
     }
 }
@@ -180,6 +271,21 @@ function read_cookies()
     if(readCookie('show_each_times')) show_each_times = readCookie('show_each_times');
     if(readCookie('fc_length')) fc_length = readCookie('fc_length');
     if(readCookie('fc_size')) fc_size = readCookie('fc_size');
+
+    if(readCookie('paul_submode')) paul_submode = readCookie('paul_submode');
+    if(readCookie('paul_0')) paul_0 = readCookie('paul_0');
+    if(readCookie('paul_1')) paul_1 = readCookie('paul_1');
+    if(readCookie('paul_2')) paul_2 = readCookie('paul_2');
+    if(readCookie('paul_3')) paul_3 = readCookie('paul_3');
+    if(readCookie('paul_4')) paul_4 = readCookie('paul_4');
+    if(readCookie('paul_5')) paul_5 = readCookie('paul_5');
+    if(readCookie('paul_6')) paul_6 = readCookie('paul_6');
+    if(readCookie('paul_7')) paul_7 = readCookie('paul_7');
+    if(readCookie('paul_8')) paul_8 = readCookie('paul_8');
+    if(readCookie('paul_9')) paul_9 = readCookie('paul_9');
+    if(readCookie('paul_J')) paul_J = readCookie('paul_J');
+    if(readCookie('paul_Q')) paul_Q = readCookie('paul_Q');
+    if(readCookie('paul_K')) paul_K = readCookie('paul_K');
 }
 
 function tester_setup()
@@ -217,29 +323,127 @@ function checkKeycode(e)
 
 function settings_setup()
 {
-    start_fc = document.getElementById("start_fc").value
-    end_fc = document.getElementById("end_fc").value
-    show_each_times = document.getElementById("show_each_times").value
-    var fc_length_input = document.getElementById("fc_length");
-    fc_length = fc_length_input.options[fc_length_input.selectedIndex].value;
-    fcs_shown = 0;
-    test_div.style.fontSize=fc_size;
-
-    number_of_FCs = (end_fc - start_fc) + 1;
-    fcs_to_show = show_each_times * number_of_FCs;
-    x = start_fc;
-
-    for(var i=0; i<number_of_FCs; i++)
+    switch(mode)
     {
-        var temp_text_holder = x + '';
-        while(temp_text_holder.length < fc_length)
-        {
-            temp_text_holder = "0" + temp_text_holder;
-        }
-        FCs[i] = {fc: temp_text_holder, number_of_times: 0, time_taken: [0], average_time_taken: 0, total_time_taken: 0};
-        x++;
+        case 1:
+            start_fc = document.getElementById("start_fc").value
+            end_fc = document.getElementById("end_fc").value
+            show_each_times = document.getElementById("show_each_times").value
+            var fc_length_input = document.getElementById("fc_length");
+            fc_length = fc_length_input.options[fc_length_input.selectedIndex].value;
+            fcs_shown = 0;
+            test_div.style.fontSize=fc_size;
+
+            number_of_FCs = (end_fc - start_fc) + 1;
+            fcs_to_show = show_each_times * number_of_FCs;
+            x = start_fc;
+
+            for(var i=0; i<number_of_FCs; i++)
+            {
+                var temp_text_holder = x + '';
+                while(temp_text_holder.length < fc_length)
+                {
+                    temp_text_holder = "0" + temp_text_holder;
+                }
+                FCs[i] = {fc: temp_text_holder, number_of_times: 0, time_taken: [0], average_time_taken: 0, total_time_taken: 0};
+                x++;
+            }
+            break;
+        case 2:
+            if(paul_submode == 1)
+            {
+                paul_0=document.getElementById('paul_0').checked;
+                paul_1=document.getElementById('paul_1').checked;
+                paul_2=document.getElementById('paul_2').checked;
+                paul_3=document.getElementById('paul_3').checked;
+                paul_4=document.getElementById('paul_4').checked;
+                paul_5=document.getElementById('paul_5').checked;
+                paul_6=document.getElementById('paul_6').checked;
+                paul_7=document.getElementById('paul_7').checked;
+                paul_8=document.getElementById('paul_8').checked;
+                paul_9=document.getElementById('paul_9').checked;
+                paul_J=document.getElementById('paul_J').checked;
+                paul_Q=document.getElementById('paul_Q').checked;
+                paul_K=document.getElementById('paul_K').checked;
+                alert(paul_0);
+
+                var card_options = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'J', 'Q', 'K'];
+                var first_card_value;
+                var temp_text_holder = '';
+                var k = 0;
+                var go_through = false;
+
+                for(var l=0; l<13; l++)
+                {
+                    go_through=false;
+                    switch(l)
+                    {
+                        case 0:
+                            if(paul_0) go_through=true;
+                            break;
+                        case 1:
+                            if(paul_1) go_through=true;
+                            break;
+                        case 2:
+                            if(paul_2) go_through=true;
+                            break;
+                        case 3:
+                            if(paul_3) go_through=true;
+                            break;
+                        case 4:
+                            if(paul_4) go_through=true;
+                            break;
+                        case 5:
+                            if(paul_5) go_through=true;
+                            break;
+                        case 6:
+                            if(paul_6) go_through=true;
+                            break;
+                        case 7:
+                            if(paul_7) go_through=true;
+                            break;
+                        case 8:
+                            if(paul_8) go_through=true;
+                            break;
+                        case 9:
+                            if(paul_9) go_through=true;
+                            break;
+                        case 10:
+                            if(paul_J) go_through=true;
+                            break;
+                        case 11:
+                            if(paul_Q) go_through=true;
+                            break;
+                        case 12:
+                            if(paul_K) go_through=true;
+                            break;
+                    }
+
+                    if(go_through)
+                    {
+                        first_card_value = card_options[l];
+
+                        for(var i=0; i<card_options.length; i++)
+                        {
+                            for(var j=0; j<card_options.length; j++)
+                            {
+                                temp_text_holder = ''+first_card_value+''+card_options[i]+''+card_options[j];
+                                FCs[k] = {fc: temp_text_holder, number_of_times: 0, time_taken: [0], average_time_taken: 0, total_time_taken: 0};
+                                k++;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+
+            }
+            alert(FCs.length);
+            number_of_FCs=FCs.length;
+            fcs_to_show = number_of_FCs;
+            break;
     }
-    
 }
 function tester()
 {
@@ -308,9 +512,6 @@ function tester()
     test_div.innerHTML = FCs[randomnumber].fc;
     startTime = new Date().getTime();
     fcs_shown++;
-    //    document.getElementById("test").innerHTML += FCs[randomnumber].number_of_times;
-    
-    //    alert(randomnumber);
 }
 
 function changeSize(size) {
