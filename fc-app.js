@@ -365,7 +365,6 @@ function settings_setup()
                 paul_J=document.getElementById('paul_J').checked;
                 paul_Q=document.getElementById('paul_Q').checked;
                 paul_K=document.getElementById('paul_K').checked;
-                alert(paul_0);
 
                 var card_options = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'J', 'Q', 'K'];
                 var first_card_value;
@@ -439,7 +438,6 @@ function settings_setup()
             {
 
             }
-            alert(FCs.length);
             number_of_FCs=FCs.length;
             fcs_to_show = number_of_FCs;
             break;
