@@ -69,25 +69,43 @@ function write_statistics()
     temptext += "</table>";
     if(fcs_shown < fcs_to_show)
     {
-        temptext += '<input style="margin-top: 5px;" type="button" value="Resume" onClick="started=1; startTime = new Date().getTime(); document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">'
+        temptext += '<button onclick="started=1; startTime = new Date().getTime(); document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">Resume</button>'
     }
-    temptext += '<input style="margin-top: 5px;" type="button" value="Go Again" onClick="FCs = []; random_number=-1; settings_setup(); started=1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">'
-    temptext += '<input style="margin-top: 5px;" type="button" value="Settings" onClick="FCs = []; random_number=-1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'start\').style.display=\'block\';">'
+    temptext += '<button onclick="FCs = []; random_number=-1; settings_setup(); started=1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'test_div\').style.display=\'block\'; tester_unsetup();">Go Again</button>'
+    temptext += '<button onClick="FCs = []; random_number=-1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'start\').style.display=\'block\'; tester_unsetup();">Settings</button>'
     document.getElementById("result").innerHTML = temptext;
 }
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 function page_setup()
 {
+    if(readCookie("start_fc")) start_fc=readCookie("start_fc");
+    if(readCookie("end_fc")) end_fc=readCookie("end_fc");
+    if(readCookie("show_each_times")) show_each_times=readCookie("show_each_times");
+    if(readCookie("fc_length")) fc_length=readCookie("fc_length");
+    if(readCookie("fc_size")) fc_size=readCookie("fc_size");
+
     test_div = document.getElementById("test");
-    test_div.style.fontSize='200';
+    test_div.style.fontSize=fc_size;
     test_example = document.getElementById("test_example");
-    test_example.style.fontSize='200';
+    test_example.style.fontSize=fc_size;
     test_div_div = document.getElementById("test_div");
 }
 
 function tester_setup()
 {
     var temptext;
-    temptext = "<input type='button' value='Pause' onClick='write_statistics();' /><input type='button' value='Next' onClick='tester();' />";
+    temptext = "<button onclick='write_statistics();'>Pause</button><button onclick='tester();'>Next</button>";
     document.getElementById("button_holder").innerHTML = temptext;
     startTime = new Date().getTime();
     tester();
@@ -95,7 +113,7 @@ function tester_setup()
 
 function tester_unsetup()
 {
-    temptext = "<input type='button' value='Pause' onClick='write_statistics();' /><input type='button' value='Go!' onClick='tester_setup();' />";
+    temptext = "<button onclick='write_statistics();'>Pause</button><button onclick='tester_setup();'>Go!</button>";
     document.getElementById("button_holder").innerHTML = temptext;
 }
 
@@ -119,6 +137,16 @@ function checkKeycode(e)
 
 function settings_setup()
 {
+    var date = new Date();
+    date.setTime(date.getTime()+(5*365*24*60*60*1000)); // keep the cookie for 5 years
+    var expires = "; expires="+date.toGMTString();
+
+    document.cookie = "start_fc="+start_fc+expires+"; path=/";
+    document.cookie = "end_fc="+end_fc+expires+"; path=/";
+    document.cookie = "show_each_times="+show_each_times+expires+"; path=/";
+    document.cookie = "fc_length="+fc_length+expires+"; path=/";
+    document.cookie = "fc_size="+fc_size+expires+"; path=/";
+
     start_fc = document.getElementById("start_fc").value
     end_fc = document.getElementById("end_fc").value
     show_each_times = document.getElementById("show_each_times").value
@@ -217,4 +245,5 @@ function tester()
 function changeSize(size) {
     fc_size += size;
     $('#test_example').css('font-size', fc_size);
+    $('#test_div').css('font-size', fc_size);
 }
