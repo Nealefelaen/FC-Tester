@@ -33,6 +33,11 @@ var paul_J = false;
 var paul_Q = false;
 var paul_K = false;
 
+var fc_table_rows = 10;
+var fc_table_columns = 2;
+var fc_table_submode = 1;
+var table_fc_size = 40;
+
 document.onkeypress = checkKeycode;
 
 function sortfunction(a, b)
@@ -101,8 +106,10 @@ function page_setup()
     temptext+="' value='1'>Digits</option>";
     temptext+="<option ";
     if(mode == 2) temptext+="selected='selected'";
-    else temptext+="false";
     temptext+="' value='2'>Paul's Mode</option>";
+    temptext+="<option ";
+    if(mode == 3) temptext+="selected='selected'";
+    temptext+="' value='3'>FC Table Generator</option>";
     $('#mode_select').html(temptext);
 
     test_div = document.getElementById("test");
@@ -151,7 +158,7 @@ function mode_change()
             temptext="<p>You want a description of Paul's Mode? So do I =)</p>";
             temptext+="<div id='settings'>";
             temptext+="  <label for='paul_submode' title='Select a submode to test'>Sub-mode: </label>"
-            temptext+="  <select class=input' id='paul_submode' onchange='paul_submode=this.options[this.selectedIndex].value; mode_change();'>";
+            temptext+="  <select class='input' id='paul_submode' onchange='paul_submode=this.options[this.selectedIndex].value; mode_change();'>";
             temptext+="    <option ";
             if(paul_submode == 1) temptext+="selected='selected'";
             temptext+=" value='1'>Face Value FCs</option>";
@@ -212,9 +219,121 @@ function mode_change()
             temptext+="</div>";
             temptext+="<span title='Example FC Size' id='test_example'>QQQ</span>";
             break;
+        case 3:
+            temptext="<p>This is a simple mode that generates a table of FCs.<br />Mode requested by kcharr12.</p>";
+            temptext+="<div id='settings'>";
+            temptext+="  <label for='fc_table_submode' title='Select a submode for the table'>Sub-mode: </label>"
+            temptext+="  <select class='input' id='fc_table_submode' onchange='fc_table_submode=this.options[this.selectedIndex].value; mode_change();'>";
+            temptext+="    <option ";
+            if(fc_table_submode == 1) temptext+="selected='selected'";
+            temptext+=" value='1'>Repeat numbers</option>";
+            temptext+="    <option ";
+            if(fc_table_submode == 2) temptext+="selected='selected'";
+            temptext+=" value='2'>Don't repeat numbers</option>";
+            temptext+="  </select><br />";
+            temptext+="  <br />";
+            temptext+="  <label for='start_fc' title='First number in the range of FCs'>Start FC: </label>";
+            temptext+="  <input name='start_fc' id='start_fc' type='text' value='"+start_fc+"' />";
+            temptext+="  <br />";
+            temptext+="  <label for='end_fc' title='Last number in the range of FCs'>End FC: </label>";
+            temptext+="  <input name='end_fc' id='end_fc' type='text' value='"+end_fc+"' />";
+            temptext+="  <br />";
+            temptext+="  <label for='fc_table_rows' title='Number of rows to show'>Rows: </label>";
+            temptext+="  <input name='fc_table_rows' id='fc_table_rows' type='text' value='"+fc_table_rows+"' />";
+            temptext+="  <br />";
+            if(fc_table_submode == 1)
+            {
+                temptext+="  <label for='fc_table_columns' title='Number of rows to show'>Columns: </label>";
+                temptext+="  <input name='fc_table_columns' id='fc_table_columns' type='text' value='"+fc_table_columns+"' />";
+                temptext+="  <br />";
+            }
+            temptext+="  <label title='Show which FCs?'>Show: </label>";
+            temptext+="  <select class='input' id='fc_length'>";
+            temptext+="    <option ";
+            if(fc_length == 2) temptext+="selected='selected'";
+            temptext+=" value='2'>Two Digit FCs</option>";
+            temptext+="    <option ";
+            if(fc_length == 3) temptext+="selected='selected'";
+            temptext+=" value='3'>Three Digit FCs</option>";
+            temptext+="  </select>";
+            temptext+="  <br />";
+            temptext+="  <label title='Increase/Decrease the size of the FC font'>Size of FC font: </label>";
+            temptext+="  <button onclick='changeSize(10);'>+</button>";
+            temptext+="  <button onclick='changeSize(-10);'>-</button>";
+            temptext+="  <br />";
+            temptext+="  <button id='next_button' onclick='settings_setup(); write_cookies(); fc_table_setup();' style='margin-top: 5px;'>Regenerate Table</button>";
+            temptext+="</div><br />";
+            temptext+="<center><span id='test_example'></span></center>";
+            break;
     }
     $('#introduction').html(temptext);
-    $('#test_example').css("font-size", fc_size);
+    switch(mode)
+    {
+        case 1:
+            $('#test_example').css("font-size", fc_size);
+            break;
+        case 2:
+            $('#test_example').css("font-size", fc_size);
+            break;
+        case 3:
+            fc_table_setup();
+            $('.test_example').css("font-size", table_fc_size);
+            break;
+    }
+}
+
+function fc_table_setup()
+{
+    var temptext;
+    temptext="<table>";
+    var x=start_fc;
+    FCs = [];
+    
+    number_of_FCs=end_fc-(start_fc-1);
+    for(var i=0; i<number_of_FCs; i++)
+    {
+        var temp_text_holder = x + '';
+        while(temp_text_holder.length < fc_length)
+        {
+            temp_text_holder = "0" + temp_text_holder;
+        }
+        FCs[i]=temp_text_holder;
+        x++;
+    }
+
+    if(fc_table_submode == 1)//repeats
+    {
+        for(var i=0; i<fc_table_columns; i++)
+        {
+            temptext+="<tr>"
+            for(var j=0; j<fc_table_rows; j++)
+            {
+                random_number=Math.floor(Math.random()*(number_of_FCs));
+                temptext+="<td class='test_example' style='padding: 10px;'>"+FCs[random_number]+"</td>";
+            }
+            temptext+=("</tr>");
+        }
+    }
+    else//no repeats
+    {
+        var numbers_done = 0;
+        for(var i=0; i<(number_of_FCs/fc_table_rows); i++)
+        {
+            temptext+="<tr>"
+            for(var j=0; j<fc_table_rows; j++)
+            {
+                if((number_of_FCs-numbers_done)==0) break;
+                random_number=Math.floor(Math.random()*(number_of_FCs-numbers_done));
+                temptext+="<td class='test_example' style='padding: 10px;'>"+FCs[random_number]+"</td>";
+                FCs.splice(random_number, 1);
+                numbers_done++;
+            }
+            temptext+=("</tr>");
+        }
+
+    }
+    $('#test_example').html(temptext);
+    $('.test_example').css("font-size", table_fc_size);
 }
 
 function write_cookies()
@@ -249,6 +368,14 @@ function write_cookies()
             document.cookie = "paul_Q="+paul_Q+expires+"; path=/";
             document.cookie = "paul_K="+paul_K+expires+"; path=/";
             break;
+        case 3:
+            document.cookie = "fc_table_submode="+fc_table_submode+expires+"; path=/";
+            document.cookie = "start_fc="+start_fc+expires+"; path=/";
+            document.cookie = "end_fc="+end_fc+expires+"; path=/";
+            document.cookie = "fc_table_rows="+fc_table_rows+expires+"; path=/";
+            document.cookie = "fc_table_columns="+fc_table_columns+expires+"; path=/";
+            document.cookie = "fc_length="+fc_length+expires+"; path=/";
+            document.cookie = "table_fc_size="+table_fc_size+expires+"; path=/";
     }
 }
 
@@ -286,6 +413,11 @@ function read_cookies()
     if(readCookie('paul_J')) paul_J = readCookie('paul_J');
     if(readCookie('paul_Q')) paul_Q = readCookie('paul_Q');
     if(readCookie('paul_K')) paul_K = readCookie('paul_K');
+
+    if(readCookie('fc_table_submode')) fc_table_submode = readCookie('fc_table_submode');
+    if(readCookie('fc_table_rows')) fc_table_rows = readCookie('fc_table_rows');
+    if(readCookie('fc_table_columns')) fc_table_columns = readCookie('fc_table_columns');
+    if(readCookie('table_fc_size')) table_fc_size = readCookie('table_fc_size');
 }
 
 function tester_setup()
@@ -441,6 +573,17 @@ function settings_setup()
             number_of_FCs=FCs.length;
             fcs_to_show = number_of_FCs;
             break;
+        case 3:
+            start_fc = document.getElementById("start_fc").value
+            end_fc = document.getElementById("end_fc").value
+            fc_table_submode = document.getElementById("fc_table_submode").value
+            fc_table_rows = document.getElementById("fc_table_rows").value
+            if(fc_table_submode == 1)
+            {
+                fc_table_columns = document.getElementById("fc_table_columns").value
+            }
+            var fc_length_input = document.getElementById("fc_length");
+            fc_length = fc_length_input.options[fc_length_input.selectedIndex].value;
     }
 }
 function tester()
@@ -513,7 +656,18 @@ function tester()
 }
 
 function changeSize(size) {
-    fc_size=parseInt(fc_size);
-    fc_size += size;
-    $('#test_example').css('font-size', fc_size);
+    switch(mode)
+    {
+        case 1:
+        case 2:
+            fc_size=parseInt(fc_size);
+            fc_size += size;
+            $('#test_example').css('font-size', fc_size);
+            break;
+        case 3:
+            table_fc_size=parseInt(table_fc_size);
+            table_fc_size+=size;
+            $('.test_example').css('font-size', table_fc_size);
+            break;
+    }
 }
