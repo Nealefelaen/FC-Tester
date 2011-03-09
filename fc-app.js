@@ -2,6 +2,7 @@ var FCs = [];
 var randomnumber = -1;
 var startTime;
 var show_each_times = 2;
+var show_each_times_backup;
 var start_fc = 1;
 var end_fc = 10;
 var x = start_fc;
@@ -32,6 +33,7 @@ var paul_9 = false;
 var paul_J = false;
 var paul_Q = false;
 var paul_K = false;
+var suit_size = 1;
 
 var fc_table_rows = 10;
 var fc_table_columns = 2;
@@ -48,7 +50,17 @@ function sortfunction(a, b)
 function write_statistics()
 {
     test_div_div.style.display = 'none';
-    test_div.innerHTML = '--';
+    if(mode != 2) test_div.innerHTML = '--';
+    else if(paul_submode == 1) test_div.innerHTML = '--';
+    else
+    {
+        var temp_text_holder = "<center><div style='background: white; width: ";
+        if(suit_size==1) temp_text_holder+=300+"px; height: 100px;";
+        else temp_text_holder+=750+"px; height: 250px;";
+        temp_text_holder += "'></div></center>";
+        $('#test').html(temp_text_holder);
+    }
+
     var temptext;
     for(var i=0; i < number_of_FCs; i++)
     {
@@ -62,6 +74,7 @@ function write_statistics()
     FCs.sort(sortfunction);
     started = 0;
     temptext = "<table><tr><td>FC</td>";
+    var test1 = 1;
     for(var j = 1; j <= show_each_times; j++)
     {
         temptext += "<td>Time " + j + "</td>";
@@ -71,6 +84,12 @@ function write_statistics()
     {
         if(FCs[i].number_of_times > 0)
         {
+            if(mode == 2 && paul_submode == 2 && suit_size == 2)
+            {
+                FCs[i].fc=FCs[i].fc.replace(/_2/g, "_1");
+                FCs[i].fc=FCs[i].fc.replace(/750/, "300");
+                FCs[i].fc=FCs[i].fc.replace(/250/, "100");
+            }
             temptext += "<tr><td>" + FCs[i].fc + "</td>";
             var total_time = 0;
             for(var j = 0; j < show_each_times; j++)
@@ -216,8 +235,17 @@ function mode_change()
             temptext+="  <button onclick='changeSize(-10);'>-</button>";
             temptext+="  <br />";
             temptext+="  <button id='next_button' onclick='settings_setup(); write_cookies(); tester_unsetup(); started=1; $(\"#start\").toggle(); $(\"#test_div\").toggle();' style='margin-top: 5px;'>Next</button>";
-            temptext+="</div>";
-            temptext+="<span title='Example FC Size' id='test_example'>QQQ</span>";
+            temptext+="</div><br />";
+            temptext+="<span title='Example FC Size' id='test_example'>";
+            if(paul_submode==1) temptext+="QQQ";
+            else
+            {
+                temptext+="<center><div style='width: ";
+                if(suit_size==1) temptext+=300;
+                else temptext+=750;
+                temptext+="px'><span class='paul_suit_"+suit_size+" paul_suit_diamond_"+suit_size+"'></span><span class='paul_suit_"+suit_size+" paul_suit_spade_"+suit_size+"'></span><span class='paul_suit_"+suit_size+" paul_suit_club_"+suit_size+"'></span></div></center>";
+            }
+            temptext+="</span>";
             break;
         case 3:
             temptext="<p>This is a simple mode that generates a table of FCs.<br />Mode requested by kcharr12.</p>";
@@ -341,6 +369,11 @@ function write_cookies()
     var date = new Date();
     date.setTime(date.getTime()+(5*365*24*60*60*1000)); // Keep cookie for 5 years
     var expires = "; expires="+date.toGMTString();
+
+    if(mode == 2)
+    {
+        show_each_times = show_each_times_backup;
+    }
 
     document.cookie = "mode="+mode+expires+"; path=/";
     switch(mode)
@@ -568,7 +601,82 @@ function settings_setup()
             }
             else
             {
+                FCs = [];
+                var temp_text_holder;
+                var l=0;
+                var suit1;
+                var suit2;
+                var suit3;
+                var diamond = "<span class='paul_suit_"+suit_size+" paul_suit_diamond_"+suit_size+"'></span>";
+                var spade = "<span class='paul_suit_"+suit_size+" paul_suit_spade_"+suit_size+"'></span>";
+                var club = "<span class='paul_suit_"+suit_size+" paul_suit_club_"+suit_size+"'></span>";
+                var heart = "<span class='paul_suit_"+suit_size+" paul_suit_heart_"+suit_size+"'></span>";
 
+                for(var i=0; i<4; i++)
+                {
+                    switch(i)
+                    {
+                        case 0:
+                            suit1=diamond;
+                            break;
+                        case 1:
+                            suit1=spade;
+                            break;
+                        case 2:
+                            suit1=club;
+                            break;
+                        case 3:
+                            suit1=heart;
+                            break;
+                    }
+                    for(var j=0; j<4; j++)
+                    {
+                        switch(j)
+                        {
+                            case 0:
+                                suit2=diamond;
+                                break;
+                            case 1:
+                                suit2=spade;
+                                break;
+                            case 2:
+                                suit2=club;
+                                break;
+                            case 3:
+                                suit2=heart;
+                                break;
+                        }
+                        for(var k=0; k<4; k++)
+                        {
+                            switch(k)
+                            {
+                                case 0:
+                                    suit3=diamond;
+                                    break;
+                                case 1:
+                                    suit3=spade;
+                                    break;
+                                case 2:
+                                    suit3=club;
+                                    break;
+                                case 3:
+                                    suit3=heart;
+                                    break;
+                            }
+                            temp_text_holder = "<center><div style='width: ";
+                            if(suit_size==1) temp_text_holder+=300+"px; height: 100px;";
+                            else temp_text_holder+=750+"px; height: 250px;";
+                            temp_text_holder += "'> " + suit1 + suit2 + suit3 + "</div></center>";
+                            FCs[l] = {fc: temp_text_holder, number_of_times: 0, time_taken: [0], average_time_taken: 0, total_time_taken: 0};
+                            l++;
+                        }
+                    }
+                }
+                var temp_text_holder = "<center><div style='background: white; width: ";
+                if(suit_size==1) temp_text_holder+=300+"px; height: 100px;";
+                else temp_text_holder+=750+"px; height: 250px;";
+                temp_text_holder += "'></div></center>";
+                $('#test').html(temp_text_holder);
             }
             number_of_FCs=FCs.length;
             fcs_to_show = number_of_FCs;
@@ -616,11 +724,17 @@ function tester()
     var rand_attempts = 0;
     while(randomnumber == last_randomnumber)
     {
+        if(mode == 2)
+        {
+            show_each_times_backup = show_each_times;
+            show_each_times = 1;
+        }
         randomnumber=Math.floor(Math.random()*(number_of_FCs));
         if(FCs[randomnumber].number_of_times >= show_each_times)
         {
             randomnumber=last_randomnumber;
         }
+
         if(rand_attempts > rand_factor)
         {
             for(var i = 0; i < number_of_FCs; i++)
@@ -659,10 +773,23 @@ function changeSize(size) {
     switch(mode)
     {
         case 1:
-        case 2:
             fc_size=parseInt(fc_size);
             fc_size += size;
             $('#test_example').css('font-size', fc_size);
+            break;
+        case 2:
+            if(paul_submode == 1)
+            {
+                fc_size=parseInt(fc_size);
+                fc_size += size;
+                $('#test_example').css('font-size', fc_size);
+            }
+            else
+            {
+                if(size<0) suit_size=1;
+                else suit_size=2;
+                mode_change();
+            }
             break;
         case 3:
             table_fc_size=parseInt(table_fc_size);
