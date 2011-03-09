@@ -400,6 +400,7 @@ function write_cookies()
             document.cookie = "paul_J="+paul_J+expires+"; path=/";
             document.cookie = "paul_Q="+paul_Q+expires+"; path=/";
             document.cookie = "paul_K="+paul_K+expires+"; path=/";
+            document.cookie = "suit_size="+fc_size+expires+"; path=/";
             break;
         case 3:
             document.cookie = "fc_table_submode="+fc_table_submode+expires+"; path=/";
@@ -446,6 +447,7 @@ function read_cookies()
     if(readCookie('paul_J')) paul_J = readCookie('paul_J');
     if(readCookie('paul_Q')) paul_Q = readCookie('paul_Q');
     if(readCookie('paul_K')) paul_K = readCookie('paul_K');
+    if(readCookie('suit_size')) suit_size = readCookie('suit_size');
 
     if(readCookie('fc_table_submode')) fc_table_submode = readCookie('fc_table_submode');
     if(readCookie('fc_table_rows')) fc_table_rows = readCookie('fc_table_rows');
