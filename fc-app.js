@@ -105,11 +105,11 @@ function page_setup()
     if(mode == 1) temptext+="selected='selected'";
     temptext+="' value='1'>Digits</option>";
     temptext+="<option ";
-    if(mode == 2) temptext+="selected='selected'";
-    temptext+="' value='2'>Paul's Mode</option>";
-    temptext+="<option ";
     if(mode == 3) temptext+="selected='selected'";
     temptext+="' value='3'>FC Table Generator</option>";
+    temptext+="<option ";
+    if(mode == 2) temptext+="selected='selected'";
+    temptext+="' value='2'>Paul's Mode</option>";
     $('#mode_select').html(temptext);
 
     test_div = document.getElementById("test");
