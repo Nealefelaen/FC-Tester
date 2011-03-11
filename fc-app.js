@@ -98,15 +98,22 @@ function write_statistics()
     overall_average_time = Math.round(total_total_time / (fcs_shown));
     FCs.sort(sortfunction);
     started = 0;
-    var total_total_time_mins = Math.round(total_total_time/(60*100))/10;
-    temptext = "<div id='concise_results'>FC Test, "+start_fc+"-"+end_fc+" ("+FCs.length+" FCs) x "+show_each_times+" ("+number_of_FCs*show_each_times+" FCs total) - "+total_total_time_mins;
-    if(total_total_time_mins == 1) temptext += " minute";
-    else temptext += " minutes";
-    temptext += "<br />-- Average Time: "+overall_average_time+"ms<br />";
-    if(less_than_1s>=1) temptext += "-- "+less_than_1s+"/"+FCs.length+" recalled in less than 1 second (average)<br />"
-    if(between_1s_2s>=1) temptext += "-- "+between_1s_2s+"/"+FCs.length+" recalled between 1 second and 2 seconds (average)<br />"
-    if(more_than_2s>=1) temptext += "-- "+more_than_2s+"/"+FCs.length+" recalled after more than 2 seconds (average)<br />"
-    temptext += "-- Minimum recall time: "+min_time+"ms ("+fc_min_time.fc+")<br />-- Maximum recall time: "+max_time+"ms ("+fc_max_time.fc+")<br /></div><br />";
+    if(mode == 2) 
+    {
+        temptext = "";
+    }
+    else
+    {
+        var total_total_time_mins = Math.round(total_total_time/(60*100))/10;
+        temptext = "<div id='concise_results'>FC Test, "+start_fc+"-"+end_fc+" ("+FCs.length+" FCs) x "+show_each_times+" ("+number_of_FCs*show_each_times+" FCs total) - "+total_total_time_mins;
+        if(total_total_time_mins == 1) temptext += " minute";
+        else temptext += " minutes";
+        temptext += "<br />-- Average Time: "+overall_average_time+"ms<br />";
+        if(less_than_1s>=1) temptext += "-- "+less_than_1s+"/"+FCs.length+" recalled in less than 1 second (average)<br />"
+        if(between_1s_2s>=1) temptext += "-- "+between_1s_2s+"/"+FCs.length+" recalled between 1 second and 2 seconds (average)<br />"
+        if(more_than_2s>=1) temptext += "-- "+more_than_2s+"/"+FCs.length+" recalled after more than 2 seconds (average)<br />"
+        temptext += "-- Minimum recall time: "+min_time+"ms ("+fc_min_time.fc+")<br />-- Maximum recall time: "+max_time+"ms ("+fc_max_time.fc+")<br /></div><br />";
+    }
     temptext += "<table><tr><td>FC</td>";
     var test1 = 1;
     for(var j = 1; j <= show_each_times; j++)
