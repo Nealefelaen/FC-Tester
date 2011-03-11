@@ -2,12 +2,13 @@ PLANNED:
 - Modes:
 - - General Card Memorization Mode
 - - Memorization Master Mode (display FCs, fade FCs out after a settable amount of time, ask for FCs back in order afterwards)
+- - Any FC Mode (ability to type in your own FCs and test them)
 - Review (in results, have a review button that plays a sound after x minutes)
 
 STARTED:
-- - Paul's Mode (specific card memorisation practice to his specifications)
 
 COMPLETE:
 - Modes:
+- - Paul's Mode (specific card memorisation practice to his specifications)
 - - FC Tester
 - Save settings in cookies

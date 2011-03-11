@@ -62,18 +62,52 @@ function write_statistics()
     }
 
     var temptext;
+    var total_total_time = 0;
+    var max_time = 0;
+    var fc_max_time;
+    var min_time = 100000;
+    var fc_min_time;
+    var overall_average_time;
+    var more_than_2s = 0;
+    var between_1s_2s = 0;
+    var less_than_1s = 0;
+
     for(var i=0; i < number_of_FCs; i++)
     {
         var total_time = 0;
         for(var j=0; j < FCs[i].number_of_times; j++)
         {
             total_time += FCs[i].time_taken[j];
+            if(FCs[i].time_taken[j] >= max_time)
+            {
+                max_time = FCs[i].time_taken[j];
+                fc_max_time = FCs[i];
+            }
+            if(FCs[i].time_taken[j] <= min_time)
+            {
+                min_time = FCs[i].time_taken[j];
+                fc_min_time = FCs[i];
+            }
         }
         FCs[i].average_time_taken = total_time / FCs[i].number_of_times;
+        if(FCs[i].average_time_taken >= 2000) more_than_2s++;
+        else if(FCs[i].average_time_take >= 1000) between_1s_2s++;
+        else less_than_1s++;
+        total_total_time += total_time;
     }
+    overall_average_time = Math.round(total_total_time / (fcs_shown));
     FCs.sort(sortfunction);
     started = 0;
-    temptext = "<table><tr><td>FC</td>";
+    var total_total_time_mins = Math.round(total_total_time/(60*100))/10;
+    temptext = "<div id='concise_results'>FC Test, "+start_fc+"-"+end_fc+" ("+FCs.length+" FCs) x "+show_each_times+" ("+number_of_FCs*show_each_times+" FCs total) - "+total_total_time_mins;
+    if(total_total_time_mins == 1) temptext += " minute";
+    else temptext += " minutes";
+    temptext += "<br />-- Average Time: "+overall_average_time+"ms<br />";
+    if(less_than_1s>=1) temptext += "-- "+less_than_1s+"/"+FCs.length+" recalled in less than 1 second (average)<br />"
+    if(between_1s_2s>=1) temptext += "-- "+between_1s_2s+"/"+FCs.length+" recalled between 1 second and 2 seconds (average)<br />"
+    if(more_than_2s>=1) temptext += "-- "+more_than_2s+"/"+FCs.length+" recalled after more than 2 seconds (average)<br />"
+    temptext += "-- Minimum recall time: "+min_time+"ms ("+fc_min_time.fc+")<br />-- Maximum recall time: "+max_time+"ms ("+fc_max_time.fc+")<br /></div><br />";
+    temptext += "<table><tr><td>FC</td>";
     var test1 = 1;
     for(var j = 1; j <= show_each_times; j++)
     {

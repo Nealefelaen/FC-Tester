@@ -103,3 +103,14 @@ input, .input
     background-position: -250px -250px;
 }
 
+td
+{
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+}
+
+#concise_results
+{
+    text-align: left;
+}
