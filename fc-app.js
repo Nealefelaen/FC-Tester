@@ -52,7 +52,6 @@ function sortfunction(a, b)
 function write_statistics()
 {
     test_div_div.style.display = 'none';
-    $("#test_div").css('color', '');
     if(mode != 2) test_div.innerHTML = '--';
     else if(paul_submode == 1) test_div.innerHTML = '--';
     else
@@ -174,7 +173,7 @@ function show_review_help()
 
 function review(review_fc, time)
 {
-    var temptext = "<button onclick=\"$('#result').toggle(); clearTimeout(timeout_var); $('#test_div').toggle();\">Done</button>";
+    var temptext = "<button onclick=\"$('#result').toggle(); clearTimeout(timeout_var); $('#test_div').toggle(); $('#test').css('color', '');\">Done</button>";
     $("#result").toggle();
     $("#button_holder").html(temptext);
     $("#test").html(review_fc);
@@ -184,7 +183,7 @@ function review(review_fc, time)
 
 function review_ended()
 {
-    $("#test_div").css('color', 'red');
+    $("#test").css('color', 'red');
     document.getElementById("sound").play();
 }
 
@@ -534,6 +533,8 @@ function tester_setup()
     temptext = "<button onclick='write_statistics();'>Pause</button><button onclick='tester();'>Next</button>";
     document.getElementById("button_holder").innerHTML = temptext;
     startTime = new Date().getTime();
+    randomnumber = -1;
+    last_randomnumber = -1;
     tester();
 }
 
@@ -541,6 +542,7 @@ function tester_unsetup()
 {
     temptext = "<button onclick='write_statistics();'>Pause</button><button onclick='tester_setup();'>Go!</button>";
     document.getElementById("button_holder").innerHTML = temptext;
+    $('#test').html('--');
 }
 
 function checkKeycode(e)
