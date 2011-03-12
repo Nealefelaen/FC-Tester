@@ -40,6 +40,8 @@ var fc_table_columns = 2;
 var fc_table_submode = 1;
 var table_fc_size = 40;
 
+var timeout_var;
+
 document.onkeypress = checkKeycode;
 
 function sortfunction(a, b)
@@ -50,6 +52,7 @@ function sortfunction(a, b)
 function write_statistics()
 {
     test_div_div.style.display = 'none';
+    $("#test_div").css('color', '');
     if(mode != 2) test_div.innerHTML = '--';
     else if(paul_submode == 1) test_div.innerHTML = '--';
     else
@@ -114,13 +117,14 @@ function write_statistics()
         if(more_than_2s>=1) temptext += "-- "+more_than_2s+"/"+FCs.length+" recalled after more than 2 seconds (average)<br />"
         temptext += "-- Minimum recall time: "+min_time+"ms ("+fc_min_time.fc+")<br />-- Maximum recall time: "+max_time+"ms ("+fc_max_time.fc+")<br /></div><br />";
     }
+    temptext += "<audio id='sound' preload='auto' autobuffer><source src='bell.ogg' /><source src='bell.mp3' /></audio>";
     temptext += "<table><tr><td>FC</td>";
     var test1 = 1;
     for(var j = 1; j <= show_each_times; j++)
     {
         temptext += "<td>Time " + j + "</td>";
     }
-    temptext += "<td>Average Time</td></tr>";
+    temptext += "<td>Average Time</td><td>Review Time (seconds)</td><td>Review<a onclick='show_review_help();'>(?)</a></td></tr>";
     for(var i = 0; i < number_of_FCs; i++)
     {
         if(FCs[i].number_of_times > 0)
@@ -144,7 +148,11 @@ function write_statistics()
                     temptext += "<td>-</td>";
                 }
             }
-            temptext += "<td>" + Math.round(FCs[i].average_time_taken) + "ms</td></tr>";
+            temptext += "<td>" + Math.round(FCs[i].average_time_taken) + "ms</td>";
+            if(Math.round(FCs[i].average_time_taken) > 2000) temptext += "<td><input type='text' style='width: 5em;' value='120' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
+            else if(Math.round(FCs[i].average_time_taken) > 1000) temptext += "<td><input type='text' style='width: 5em;' value='60' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
+            else temptext += "<td><input type='text' style='width: 5em;' value='30' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
+            temptext += "</tr>";
         }
     }
     temptext += "</table>";
@@ -156,6 +164,30 @@ function write_statistics()
     temptext += '<button onClick="FCs = []; random_number=-1; document.getElementById(\'result\').innerHTML=\'\'; document.getElementById(\'start\').style.display=\'block\'; tester_unsetup();">Settings</button>'
     document.getElementById("result").innerHTML = temptext;
 }
+
+function show_review_help()
+{
+    var temptext = "<div id='show_review_help' onclick='$(this).remove()'><p>Reviewing an FC</p><p>For FCs that take you longer than two seconds to recognise it is recommended that you review the FC for two minutes using the <a href='http://www.pmemory.com/student-area/GMS_Manual/Inner_Speech_and_Inner_Drawing_Techniques.htm'>Inner Drawing technique</a>. FCs that take between one and two seconds to recognise should get one minute of review.</p><p>Input the time (in seconds) to review an FC and then press the 'Review' button. The FC will be shown and after the set time has passed it will turn red, and on supported browsers a sound will play <a onclick='document.getElementById(\"sound\").play()'>(Click here to test the sound)</a>.</p><p>(click anywhere on this message to close this message)</p></div>";
+    
+    $('body').append(temptext);
+}
+
+function review(review_fc, time)
+{
+    var temptext = "<button onclick=\"$('#result').toggle(); clearTimeout(timeout_var); $('#test_div').toggle();\">Done</button>";
+    $("#result").toggle();
+    $("#button_holder").html(temptext);
+    $("#test").html(review_fc);
+    $("#test_div").toggle();
+    timeout_var = setTimeout("review_ended()", time*1000);
+}
+
+function review_ended()
+{
+    $("#test_div").css('color', 'red');
+    document.getElementById("sound").play();
+}
+
 function page_setup()
 {
     read_cookies();

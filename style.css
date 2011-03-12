@@ -114,3 +114,19 @@ td
 {
     text-align: left;
 }
+
+#show_review_help
+{
+    position: absolute;
+    width: 50%;
+    left: 25%;
+    background: #008;
+    opacity: 0.7;
+    text-align: center;
+}
+
+a
+{
+    cursor: pointer;
+    color: #99F;
+}
