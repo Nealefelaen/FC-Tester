@@ -92,8 +92,14 @@ function write_statistics()
             }
         }
         FCs[i].average_time_taken = total_time / FCs[i].number_of_times;
-        if(FCs[i].average_time_taken >= 2000) more_than_2s++;
-        else if(FCs[i].average_time_take >= 1000) between_1s_2s++;
+        if(FCs[i].average_time_taken >= 2000)
+        {
+            more_than_2s++;
+        }
+        else if(FCs[i].average_time_taken >= 1000)
+        { 
+            between_1s_2s++;
+        }
         else less_than_1s++;
         total_total_time += total_time;
     }
@@ -150,7 +156,8 @@ function write_statistics()
             temptext += "<td>" + Math.round(FCs[i].average_time_taken) + "ms</td>";
             if(Math.round(FCs[i].average_time_taken) > 2000) temptext += "<td><input type='text' style='width: 5em;' value='120' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
             else if(Math.round(FCs[i].average_time_taken) > 1000) temptext += "<td><input type='text' style='width: 5em;' value='60' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
-            else temptext += "<td><input type='text' style='width: 5em;' value='30' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
+            else if(Math.round(FCs[i].average_time_taken) > 500) temptext += "<td><input type='text' style='width: 5em;' value='30' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
+            else temptext += "<td><input type='text' style='width: 5em;' value='0' /></td><td><button onclick=\"review('"+FCs[i].fc+"', $(this).parent().prev().children()[0].value); $(this).css('background', '#888'); $(this).html('Reviewed');\">Review</button></td>";
             temptext += "</tr>";
         }
     }
