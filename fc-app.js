@@ -1,4 +1,5 @@
 var FCs = [];
+var any_fcs = [];
 var randomnumber = -1;
 var startTime;
 var show_each_times = 2;
@@ -206,6 +207,9 @@ function page_setup()
     if(mode == 3) temptext+="selected='selected'";
     temptext+="' value='3'>FC Table Generator</option>";
     temptext+="<option ";
+    if(mode == 4) temptext+="selected='selected'";
+    temptext+="' value='4'>Any FC Mode</option>";
+    temptext+="<option ";
     if(mode == 2) temptext+="selected='selected'";
     temptext+="' value='2'>Paul's Mode</option>";
     $('#mode_select').html(temptext);
@@ -372,10 +376,40 @@ function mode_change()
             temptext+="</div><br />";
             temptext+="<center><span id='test_example'></span></center>";
             break;
+        case 4:
+            temptext="<p>This is a hacked together mode that allows you to put in any FC and have it tested.<br />Mode requested again by Sp00k after the project was abandoned.</p>";
+            temptext+="<div id='settings'>";
+            temptext+="  <label for='show_each_times' title='Number of times to show each FC'>Number of times to show: </label>";
+            temptext+="  <input name='show_each_times' id='show_each_times' type='text' value='"+show_each_times+"' />";
+            temptext+="  <br />";
+            temptext+="  <label title='Increase/Decrease the size of the FC font'>Size of FC font: </label>";
+            temptext+="  <button onclick='changeSize(10)'>+</button>";
+            temptext+="  <button onclick='changeSize(-10);'>-</button>";
+            temptext+="  <br />";
+            temptext+="  <label for='FCs' title='List of FCs to show'>FCs: </label>";
+            temptext+="  <div id='any_fcs_holder'>";
+            if(any_fcs.length > 0)
+            {
+                for(i=0; i<any_fcs.length; i++)
+                {
+                    temptext+="  <label> </label>  <input class='fcs' type='text' value='"+any_fcs[i]+"' />";
+                }
+            }
+            else temptext+="  <label> </label>  <input class='fcs' type='text' value='' />";
+            temptext+="  </div>";
+            temptext+="  <br />";
+            temptext+="  <label> </label><button onclick='add_any_fc()'>Add FC slot</button>";
+            temptext+="  <button onclick='any_fcs = []; mode_change()'>Clear FC slots</button>";
+            temptext+="  <br />";
+            temptext+="  <button id='next_button' onclick='settings_setup(); write_cookies(); tester_unsetup(); started=1; $(\"#start\").toggle(); $(\"#test_div\").toggle();' style='margin-top: 5px;'>Next</button>";
+            temptext+="</div>";
+            temptext+="<span title='Example FC Size' id='test_example'>00</span>";
+            break;
     }
     $('#introduction').html(temptext);
     switch(mode)
     {
+        case 4:
         case 1:
             $('#test_example').css("font-size", fc_size);
             break;
@@ -489,6 +523,15 @@ function write_cookies()
             document.cookie = "fc_table_columns="+fc_table_columns+expires+"; path=/";
             document.cookie = "fc_length="+fc_length+expires+"; path=/";
             document.cookie = "table_fc_size="+table_fc_size+expires+"; path=/";
+            break;
+        case 4:
+            var any_fc_holder = any_fcs[0];
+            for(i=1; i<any_fcs.length; i++)
+            {
+                any_fc_holder += ":sep:"+any_fcs[i];
+            }
+            document.cookie = "any_fcs="+any_fc_holder+expires+"; path=/";
+            break;
     }
 }
 
@@ -532,6 +575,14 @@ function read_cookies()
     if(readCookie('fc_table_rows')) fc_table_rows = readCookie('fc_table_rows');
     if(readCookie('fc_table_columns')) fc_table_columns = readCookie('fc_table_columns');
     if(readCookie('table_fc_size')) table_fc_size = readCookie('table_fc_size');
+
+    if(readCookie('any_fcs'))
+    {
+        var any_fc_holder;
+        any_fc_holder = readCookie('any_fcs');
+        any_fcs = any_fc_holder.split(':sep:');
+    }
+    
 }
 
 function tester_setup()
@@ -776,7 +827,28 @@ function settings_setup()
             }
             var fc_length_input = document.getElementById("fc_length");
             fc_length = fc_length_input.options[fc_length_input.selectedIndex].value;
+            break;
+        case 4:
+            show_each_times = document.getElementById("show_each_times").value
+            fcs_shown = 0;
+            var fc_counter = 0;
+            $("#any_fcs_holder input").each(function (i) {
+                if($(this).val() != "")
+                {
+                    any_fcs[fc_counter] = $(this).val();
+//                    FCs[index].fc = $(this).val();
+                    FCs[fc_counter] = {fc: $(this).val(), number_of_times: 0, time_taken: [0], average_time_taken: 0, total_time_taken: 0};
+                    fc_counter++;
+                }
+            })
+            number_of_FCs = FCs.length;
+            fcs_to_show = number_of_FCs*show_each_times;
+            break;
     }
+}
+function add_any_fc()
+{
+    $("#any_fcs_holder").append("<label> </label>  <input class='fcs' type='text' value='' />");
 }
 function tester()
 {
@@ -856,6 +928,7 @@ function tester()
 function changeSize(size) {
     switch(mode)
     {
+        case 4:
         case 1:
             fc_size=parseInt(fc_size);
             fc_size += size;
